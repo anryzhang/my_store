@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="./../node_modules/underscore/underscore.js"></script>
+    <script src="./../node_modules/jquery/dist/jquery.js"></script>
+</head>
+<body>
+
+<!--<form action="./../admin/form.php" method="post">-->
+<form class="J_form">
+    <div>
+        <label>
+            name:
+        </label>
+        <input type="text" class="J_name" name="name">
+    </div>
+    <div>
+        <label>email:</label>
+        <input type="email" class="J_email" name="email">
+    </div>
+    <div>
+        <label>address:</label>
+        <input type="text" class="J_address" name="address">
+    </div>
+    <div>
+        <input type="button" class="J_submit" value="提交">
+    </div>
+</form>
+<div class="J_res">
+
+</div>
+<script type="text/template" class="J_tmp">
+    <ul>
+
+    </ul>
+</script>
+<script>
+    $(function () {
+
+        $('.J_submit').on('click',function () {
+
+            $.ajax({
+                url:'/my_store/admin/form.php',
+                type:'post',
+                data:{
+                    name:$('.J_form').find('.J_name').val(),
+                    email:$('.J_form').find('.J_email').val(),
+                    address:$('.J_form').find('.J_address').val()
+                },
+                dataType:'json',
+                success:function (res) {
+                    console.log(res);
+                }
+            });
+        });
+
+
+    });
+</script>
+</body>
+</html>
