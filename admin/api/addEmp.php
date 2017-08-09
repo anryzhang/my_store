@@ -25,7 +25,7 @@ $sql_i = "insert emp (name,grade,email,salary) values('$name','$grade','$email',
 $res_i  = $conn->query($sql_i);
 
 if($res_i){
-    echo API::json(100, '删除成功', array());
+    echo API::json(100, '插入成功', array());
 }else{
     echo API::json(400, '插入失败', array());
 

@@ -33,7 +33,7 @@ if($res_sRow = $res_select->fetch_assoc()){
             echo API::json(100,'更新数据成功',array());
 
         }else{
-            echo API::json(400, '删除失败', array());
+            echo API::json(400, '更新数据失败', array());
         }
         $res_select->free();
 
