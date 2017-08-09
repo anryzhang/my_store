@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="./../node_modules/underscore/underscore.js"></script>
+    <script src="./../node_modules/jquery/dist/jquery.js"></script>
+</head>
+<body>
+<div>
+    <div class="title">登录</div>
+    <div>
+        <label>name</label>
+        <input type="text" name="id" class="J_id">
+    </div>
+    <div>
+        <label>password</label>
+        <input type="password" name="password" class="J_password">
+    </div>
+    <div>
+        <button class="J_login">登录</button>
+    </div>
+    测试账户  user: 100  pwd:admin / user:101 pwd:123
+</div>
+
+
+<script>
+    $(function(){
+        $(document).on('click','.J_login',function(){
+
+            var _data = {
+                id: $('.J_id').val(),
+                password: $('.J_password').val()
+            }
+            $.ajax({
+                url:'/my_store/admin/api/loginProcess.php',
+                data:_data,
+                type:'post',
+                dataType:'json',
+                success:function(res){
+                    console.log(res);
+                    if(res.code == 100){
+                        location.href = res.data.url + '?name=' + res.data.name;
+                    }else{
+                        alert(res.message);
+                    }
+                }
+            })
+        })
+    });
+</script>
+
+</body>
+</html>

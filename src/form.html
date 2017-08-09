@@ -25,6 +25,15 @@
         <input type="text" class="J_address" name="address">
     </div>
     <div>
+        <label>age:</label>
+        <input type="number" class="J_age" name="address">
+    </div>
+    <div>
+        <label>sex:</label>
+        <input type="radio" name="sex" checked class="J_sex" value="1">男
+        <input type="radio" name="sex" class="J_sex" value="0">女
+    </div>
+    <div>
         <input type="button" class="J_submit" value="提交">
     </div>
 </form>
@@ -41,20 +50,40 @@
 
         $('.J_submit').on('click',function () {
 
+            var _data = {
+                name:$('.J_form').find('.J_name').val(),
+                email:$('.J_form').find('.J_email').val(),
+                address:$('.J_form').find('.J_address').val(),
+                age:$('.J_form').find('.J_age').val(),
+                sex:$('.J_form').find('.J_sex:checked').val()
+            };
+            console.log(_data);
             $.ajax({
                 url:'/my_store/admin/form.php',
                 type:'post',
-                data:{
-                    name:$('.J_form').find('.J_name').val(),
-                    email:$('.J_form').find('.J_email').val(),
-                    address:$('.J_form').find('.J_address').val()
-                },
+                data:_data,
                 dataType:'json',
                 success:function (res) {
                     console.log(res);
                 }
             });
         });
+
+
+        function _doWhile(){
+            var i = 5;
+//            do{
+//                console.log(i);
+//               i++;
+//            }while (i<5);
+
+            while(i<5){
+                console.log(i);
+                i++
+            }
+        }
+
+        _doWhile();
 
 
     });

@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="./../node_modules/underscore/underscore.js"></script>
+    <script src="./../node_modules/jquery/dist/jquery.js"></script>
+</head>
+<body>
+<section class="J_form emp_form">
+    <h3 style="text-align: center;">添加员工</h3>
+    <div class="emp">
+        <label>名字</label>
+        <input type="text" class="J_name">
+    </div>
+    <div class="emp">
+        <label>email</label>
+        <input type="email" class="J_email">
+    </div>
+    <div class="emp">
+        <label>级别</label>
+        <input type="number" class="J_grade">
+    </div>
+    <div class="emp">
+        <label>工资</label>
+        <input type="number" class="J_salary">
+    </div>
+    <div class="J_save btn">提交</div>
+</section>
+<style>
+    .emp_form{
+        width: 500px;
+        margin:0 auto 20px;
+        border: 2px solid #eee;
+    }
+
+    .emp_form .emp{
+        border-bottom: 1px solid #eee;
+        padding: 10px;
+    }
+    .emp label{
+        min-width: 100px;
+        padding-right:10px;
+        text-align: right;
+        font-size: 13px;
+        display: inline-block;
+    }
+    .emp_form .btn{
+        display: block;
+        width: 80px;
+        text-align: center;
+        height: 40px;
+        background: #548de4;
+        color: #fff;
+        line-height: 40px;
+        font-size: 14px;
+        margin: 20px auto;
+        cursor: pointer;
+    }
+</style>
+<section class="J_empList emp_list">
+
+</section>
+<style>
+    ul,li{
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        font-size: 0;
+    }
+    .emp_list{
+        width: 800px;
+        margin:0 auto;
+    }
+
+    .emp_list li.title span{
+        font-weight: bold;
+        font-size:13px;
+        text-align: center;
+        min-width:100px;
+        text-align: center;
+        display: inline-block;
+        border: 1px solid #efefef;
+        line-height: 20px;
+        padding:10px;
+    }
+    .emp_list li.item span{
+        min-width:100px;
+        text-align: center;
+        display: inline-block;
+        font-size: 12px;
+        border:1px solid #efefef;
+        line-height: 20px;
+        padding: 10px;
+    }
+    .emp_list li span .fun{
+        font-weight: normal;
+        color: #548de4;
+        cursor: pointer;
+    }
+</style>
+<script type="text/template" id="J_emp">
+    <ul>
+        <li class="title">
+            <span>id</span>
+            <span>名字</span>
+            <span>级别</span>
+            <span>email</span>
+            <span>工资</span>
+            <span>操作</span>
+        </li>
+        <%_.each(res,function(item){%>
+            <li class="item">
+                <span><%= item.id%></span>
+                <span><%= item.name%></span>
+                <span><%= item.grade%></span>
+                <span><%= item.email%></span>
+                <span><%= item.salary%></span>
+                <span>
+                    <b class="J_add fun">加薪</b>
+                    <b data-id="<%= item.id%>" class="J_del fun">删除</b>
+                </span>
+            </li>
+        <%})%>
+    </ul>
+</script>
+<script>
+    $(function(){
+        function _getEmpList(){
+            var _data = {};
+            $.ajax({
+                url:'/my_store/admin/api/empList.php',
+                data:_data,
+                type:'get',
+                dataType:'json',
+                success:function (res) {
+                    console.log(res);
+                    if(res.code == 100){
+                        $('body').find('.J_empList').empty();
+                        var _html = _.template($('#J_emp').text());
+                        $('body').find('.J_empList').append(_html({res:res.data}));
+                    }else{
+                        alert(res.message);
+                    }
+                }
+            })
+        }
+        _getEmpList();
+
+        $('.J_empList').on('click','.J_del',function (e) {
+            var id = $(e.currentTarget).attr('data-id');
+            $.ajax({
+                url:'/my_store/admin/api/delEmp.php',
+                data:{
+                    id:id
+                },
+                type:'post',
+                dataType:'json',
+                success:function (res) {
+                    if(res.code == 100){
+                        alert(res.message);
+                        _getEmpList();
+                    }else{
+                        alert(res.message);
+                    }
+                }
+            });
+        });
+
+        $('.J_form').on('click','.J_save',function (e) {
+            var _data = {
+                name: $('.J_form').find('.J_name').val(),
+                email: $('.J_form').find('.J_email').val(),
+                grade: $('.J_form').find('.J_grade').val(),
+                salary: $('.J_form').find('.J_salary').val()
+            };
+
+            $.ajax({
+                url:'/my_store/admin/api/addEmp.php',
+                data:_data,
+                type:'post',
+                dataType:'json',
+                success:function (res) {
+                    if(res.code == 100){
+                        alert('插入数据成功');
+                        _getEmpList();
+                    }else{
+                        alert(res.message);
+                    }
+                }
+            })
+
+        })
+    })
+</script>
+</body>
+</html>
