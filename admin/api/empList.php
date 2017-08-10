@@ -17,7 +17,28 @@ if($conn->connect_error){
     die("连接失败") or $conn->connect_error ."<br>";
 }
 
-$sql_s = "select * from emp";
+$pageIndex = $_POST["pageIndex"]; //当前页面索引
+$pageSize = $_POST["pageSize"]; //每页条数
+$pageCount = 0; //总页数
+$rowCount = 0; //总条数
+//查询总条数
+$sql_row = "select count(id) from emp";
+
+$res_row = $conn->query($sql_row);
+if($resRow = $res_row->fetch_row()){
+    $rowCount = $resRow[0];
+    $res_row->free();
+}
+
+$pageCount = ceil($rowCount/$pageSize);
+
+$pageInfo = array(
+    "pageIndex"=>$pageIndex,
+    "pageSize"=>$pageSize,
+    "pageCount"=>$pageCount
+);
+
+$sql_s = "select * from emp order by id desc limit ".($pageIndex-1)*$pageSize .",$pageSize";
 
 $res = $conn->query($sql_s);
 $res_object = array();
@@ -28,7 +49,7 @@ if($res->num_rows>0){
 //        var_dump($row);
         array_push($res_array,$row);
     }
-    $res_object = API::json(100,'',$res_array);
+    $res_object = API::json(100,'',$res_array,$pageInfo);
 }else{
     $res_object = API::json(400,'失败',array());
 }

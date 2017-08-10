@@ -65,6 +65,32 @@
 <section class="J_empList emp_list">
 
 </section>
+<section class="J_page page_box">
+
+</section>
+<style>
+    .page_box{
+        padding: 15px;
+        text-align: center;
+    }
+    .page_box li{
+        display: inline-block;
+        min-width: 20px;
+        height: 20px;
+        border:1px solid #eee;
+        text-align: center;
+        line-height: 20px;
+        font-size: 12px;
+        color: #000;
+        cursor: pointer;
+        margin-left:10px;
+    }
+    .page_box li.act{
+        border-color: #548de4;
+        background: #4f9ded;
+        color: #fff;
+    }
+</style>
 <style>
     ul,li{
         margin: 0;
@@ -129,21 +155,52 @@
         <%})%>
     </ul>
 </script>
+<script type="text/template" id="J_pageTemp">
+    <ul>
+        <% for(var i = 0; i<pages.pageCount; i++){ %>
+            <%if(pages.pageIndex == (i+1)){%>
+            <li class="act" data-index="<%= i+1%>"><%= i+1%></li>
+            <%}else{%>
+            <li class="J_pageObj" data-index="<%= i+1%>"><%= i+1%></li>
+
+            <%}%>
+        <% } %>
+    </ul>
+</script>
 <script>
     $(function(){
+        var pageInfo = {
+            pageIndex:1,
+            pageSize: 3
+        };
+        var isLock = false;
         function _getEmpList(){
-            var _data = {};
+            if(isLock){
+                return false;
+            }
+            var _data = {
+                pageIndex: pageInfo.pageIndex,
+                pageSize: pageInfo.pageSize
+            };
             $.ajax({
-                url:'/my_store/admin/api/empList.php',
+                url:'/my_store/admin/api/empList.php?t='+$.now(),
                 data:_data,
-                type:'get',
+                type:'post',
                 dataType:'json',
+                beforeSend:function(){
+                    isLock = true;
+                },
                 success:function (res) {
                     console.log(res);
+                    isLock = false;
                     if(res.code == 100){
+                        pageInfo = res.pageInfo;
                         $('body').find('.J_empList').empty();
                         var _html = _.template($('#J_emp').text());
                         $('body').find('.J_empList').append(_html({res:res.data}));
+                        $('body').find('.J_page').empty();
+                        var _page = _.template($('#J_pageTemp').text());
+                        $('body').find('.J_page').append(_page({pages:res.pageInfo}));
                     }else{
                         alert(res.message);
                     }
@@ -151,6 +208,11 @@
             })
         }
         _getEmpList();
+
+        $('.J_page').on('click','.J_pageObj',function(e){
+            pageInfo.pageIndex = $(e.currentTarget).attr('data-index');
+            _getEmpList();
+        });
 
         $('.J_empList').on('click','.J_del',function (e) {
             var id = $(e.currentTarget).attr('data-id');
