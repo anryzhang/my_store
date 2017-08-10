@@ -263,6 +263,9 @@
                 id: _id
             };
 
+            if(!_id){
+                pageInfo.pageIndex = 1;
+            }
             var _url = _id ?"/my_store/admin/api/updateEmp.php" :"/my_store/admin/api/addEmp.php";
             $.ajax({
                 url: _url,
