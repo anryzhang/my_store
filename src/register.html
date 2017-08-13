@@ -2,33 +2,35 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <script src="./../node_modules/underscore/underscore.js"></script>
+    <title>注册新账户</title>
     <script src="./../node_modules/jquery/dist/jquery.js"></script>
     <script src="./js/jquery.md5.js"></script>
 </head>
 <body>
-<div class="login">
-    <div class="title">登录</div>
+<div class="from">
+    <div class="title">用户注册</div>
     <div class="item">
         <label>用户名</label>
-        <input type="text" name="name" class="J_name">
+        <input type="text" class="J_userName">
     </div>
     <div class="item">
         <label>密码</label>
-        <input type="password" name="password" class="J_password">
+        <input type="password" class="J_userPwd">
     </div>
     <div class="item">
-        <button class="J_login">登录</button>
+        <label>重新输入密码</label>
+        <input type="password" class="J_userPwd2">
     </div>
-
+    <div class="item">
+        <button class="J_save">确定</button>
+    </div>
     <div class="other">
-        暂无账户,<a href="register.html">注册新账户</a>
+        <a  href="./login.html">有一个账户,返回登录</a>
     </div>
 
 </div>
 <style>
-    .login{
+    .from{
         text-align: center;
         width: 300px;
         margin:0 auto;
@@ -43,40 +45,40 @@
 
     }
     .item label{
-        min-width: 80px;
+        min-width: 100px;
         display: inline-block;
         text-align: right;
     }
     .item button{
-        margin-left: 20px;
+        margin-left: 10px;
     }
     .other{
         padding-top: 15px;
         font-size: 12px;
     }
-
 </style>
-
 <script>
     $(function(){
-        $('.J_name').val('');
-        $('.J_password').val('');
 
-        $(document).on('click','.J_login',function(){
-
+        $(document).on('click','.J_save',function (e) {
+            var _pw1 = $('.J_userPwd').val();
+            var _pw2 = $('.J_userPwd2').val();
             var _data = {
-                name: $('.J_name').val(),
-                password: $.md5($('.J_password').val())
+                userName:$.trim($('.J_userName').val()),
+                password: (_pw1 && _pw2 && _pw1 === _pw2) ? $.md5(_pw1) : ''
+            }
+            if(!_data.password){
+                alert('请输入正确的密码');
+                return false;
             }
             $.ajax({
-                url:'/my_store/admin/api/loginProcess.php',
+                url:'/my_store/admin/api/register.php',
                 data:_data,
-                type:'post',
                 dataType:'json',
-                success:function(res){
-                    console.log(res);
+                type:'post',
+                success:function (res) {
                     if(res.code == 100){
-                        location.href = res.data.url + '?name=' + res.data.name;
+                        location.href='./login.html';
                     }else{
                         alert(res.message);
                     }
@@ -84,7 +86,7 @@
             })
         })
     });
-</script>
 
+</script>
 </body>
 </html>

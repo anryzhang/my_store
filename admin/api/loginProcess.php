@@ -6,7 +6,7 @@
  * Time: 上午8:19
  */
 
-$id = $_POST["id"];
+$name = $_POST["name"];
 $password = $_POST['password'];
 
 $config = require_once './../config.php';
@@ -19,12 +19,13 @@ if ($conn->connect_error) {
 }
 
 //防注入
-$sql = "select name, password from admin where adm_id='$id'";
+$sql = "select name, password from admin where name='$name'";
 
 $res = $conn->query($sql);
 
 if ($row = $res->fetch_assoc()) {
-    if ($row['password'] == md5($password)) {
+//    if ($row['password'] == md5($password)) {
+    if ($row['password'] == $password) {
         $url = "empMain.html";
         $_url = array(
             'url' => $url,
