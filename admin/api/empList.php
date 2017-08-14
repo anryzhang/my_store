@@ -17,6 +17,13 @@ if($conn->connect_error){
     die("连接失败") or $conn->connect_error ."<br>";
 }
 
+$cookie = $_COOKIE['token'];
+
+if(!isset($cookie)){
+    echo API::json(300, '用户没有权限,请先登录', array());
+   die();
+}
+
 $pageIndex = $_POST["pageIndex"]; //当前页面索引
 $pageSize = $_POST["pageSize"]; //每页条数
 $pageCount = 0; //总页数

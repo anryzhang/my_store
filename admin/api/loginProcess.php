@@ -23,6 +23,9 @@ $sql = "select name, password from admin where name='$name'";
 
 $res = $conn->query($sql);
 
+
+
+
 if ($row = $res->fetch_assoc()) {
 //    if ($row['password'] == md5($password)) {
     if ($row['password'] == $password) {
@@ -31,6 +34,8 @@ if ($row = $res->fetch_assoc()) {
             'url' => $url,
             'name'=> $row['name']
         );
+        //cookie
+        setCookie("token",md5($row['name'].time()),time()+3600,'/my_store');
         echo API::json(100, '', $_url);
     }else{
         $obj_array = array();

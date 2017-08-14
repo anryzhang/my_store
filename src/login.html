@@ -56,11 +56,12 @@
     }
 
 </style>
-
+<script src="./js/Util.js"></script>
 <script>
+
+
     $(function(){
-        $('.J_name').val('');
-        $('.J_password').val('');
+
 
         $(document).on('click','.J_login',function(){
 
@@ -73,9 +74,13 @@
                 data:_data,
                 type:'post',
                 dataType:'json',
+                beforeSend:function(xhr){
+                    console.log(xhr);
+                },
                 success:function(res){
                     console.log(res);
                     if(res.code == 100){
+//                        Util.setCookie('name',_data.name,1);
                         location.href = res.data.url + '?name=' + res.data.name;
                     }else{
                         alert(res.message);

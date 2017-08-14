@@ -168,6 +168,8 @@
         <% } %>
     </ul>
 </script>
+
+<script src="./js/Util.js"></script>
 <script>
     $(function(){
         var pageInfo = {
@@ -188,8 +190,9 @@
                 data:_data,
                 type:'post',
                 dataType:'json',
-                beforeSend:function(){
+                beforeSend:function(xhr){
                     isLock = true;
+                    xhr.setRequestHeader('token',Util.getCookie('token'));
                 },
                 success:function (res) {
                     console.log(res);
@@ -202,6 +205,9 @@
                         $('body').find('.J_page').empty();
                         var _page = _.template($('#J_pageTemp').text());
                         $('body').find('.J_page').append(_page({pages:res.pageInfo}));
+                    }else if(res.code == 300){
+                        alert(res.message);
+                        location.href='./login.html';
                     }else{
                         alert(res.message);
                     }
@@ -221,6 +227,9 @@
                 url:'/my_store/admin/api/delEmp.php',
                 data:{
                     id:id
+                },
+                beforeSend:function (xhr) {
+                    xhr.setRequestHeader('token',Util.getCookie('token'));
                 },
                 type:'post',
                 dataType:'json',
@@ -273,6 +282,9 @@
                 data:_data,
                 type:'post',
                 dataType:'json',
+                beforeSend:function (xhr) {
+                    xhr.setRequestHeader('token',Util.getCookie('token'));
+                },
                 success:function (res) {
                     if(res.code == 100){
                         $(e.currentTarget).removeAttr('data-id');
