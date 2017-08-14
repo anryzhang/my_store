@@ -20,6 +20,13 @@ $email = $_POST['email'];
 $grade = $_POST['grade'];
 $salary = $_POST['salary'];
 
+$cookie = $_COOKIE['token'];
+
+if(!isset($cookie)){
+    echo API::json(300, '用户没有权限,请先登录', array());
+    die();
+}
+
 $sql_s = "select id from emp where id=$id";
 
 $res_select = $conn->query($sql_s);

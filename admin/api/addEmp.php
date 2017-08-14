@@ -15,6 +15,13 @@ if ($conn->connect_error) {
     die("连接失败") or $conn->connect_error . "<br>";
 }
 
+$cookie = $_COOKIE['token'];
+
+if(!isset($cookie)){
+    echo API::json(300, '用户没有权限,请先登录', array());
+    die();
+}
+
 $name = $_POST['name'];
 $email = $_POST['email'];
 $grade = $_POST['grade'];
