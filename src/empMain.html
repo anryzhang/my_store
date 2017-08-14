@@ -10,6 +10,20 @@
     <script src="./../node_modules/jquery/dist/jquery.js"></script>
 </head>
 <body>
+<section class="logout">
+    <span class="J_logout">退出</span>
+</section>
+<style>
+    .logout{
+        width: 800px;
+        margin: 0 auto;
+        text-align: right;
+
+    }
+    .logout span{
+        cursor: pointer;
+    }
+</style>
 <section class="J_form emp_form">
     <h3 style="text-align: center;">添加员工</h3>
     <div class="emp">
@@ -300,7 +314,28 @@
                 }
             })
 
-        })
+        });
+
+        $(document).on('click','.J_logout',function (e) {
+
+            $.ajax({
+                url:'/my_store/admin/api/logout.php',
+                type:'get',
+                beforeSend:function (xhr) {
+                    xhr.setRequestHeader('token',Util.getCookie('token'));
+                },
+                dataType:"json",
+                success:function(res){
+                    if(res.code == 100){
+                        location.href = './login.html';
+                    }else{
+                        alert(res.message);
+                    }
+                }
+            })
+
+        });
+
     })
 </script>
 </body>

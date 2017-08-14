@@ -6,7 +6,7 @@
  * Time: 下午1:05
  */
 
-
+session_start();
 $config = require_once './../config.php';
 require_once "./../Api.php";
 
@@ -21,7 +21,14 @@ $cookie = $_COOKIE['token'];
 
 if(!isset($cookie)){
     echo API::json(300, '用户没有权限,请先登录', array());
+    $conn->close();
    die();
+}
+
+if(!isset($_SESSION['name'])){
+    echo API::json(300, '用户没有权限,请先登录', array());
+    $conn->close();
+    die();
 }
 
 $pageIndex = $_POST["pageIndex"]; //当前页面索引
@@ -56,6 +63,7 @@ if($res->num_rows>0){
 //        var_dump($row);
         array_push($res_array,$row);
     }
+
     $res_object = API::json(100,'',$res_array,$pageInfo);
 }else{
     $res_object = API::json(400,'失败',array());

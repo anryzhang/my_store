@@ -6,6 +6,10 @@
  * Time: 上午8:19
  */
 
+session_start();
+
+
+
 $name = $_POST["name"];
 $password = $_POST['password'];
 
@@ -18,12 +22,12 @@ if ($conn->connect_error) {
     die("连接失败") or $conn->connect_error . "<br>";
 }
 
+
+
 //防注入
 $sql = "select name, password from admin where name='$name'";
 
 $res = $conn->query($sql);
-
-
 
 
 if ($row = $res->fetch_assoc()) {
@@ -36,6 +40,10 @@ if ($row = $res->fetch_assoc()) {
         );
         //cookie
         setCookie("token",md5($row['name'].time()),time()+3600,'/my_store');
+        if(!isset($_SESSION['name'])){
+            $_SESSION["name"] = $row['name'];
+        }
+
         echo API::json(100, '', $_url);
     }else{
         $obj_array = array();

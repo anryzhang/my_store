@@ -5,7 +5,7 @@
  * Date: 2017/8/9
  * Time: 下午2:48
  */
-
+session_start();
 $config = require_once "./../config.php";
 require_once './../Api.php';
 
@@ -19,6 +19,12 @@ $cookie = $_COOKIE['token'];
 
 if(!isset($cookie)){
     echo API::json(300, '用户没有权限,请先登录', array());
+    die();
+}
+
+if(!isset($_SESSION['name'])){
+    echo API::json(300, '用户没有权限,请先登录', array());
+    $conn->close();
     die();
 }
 

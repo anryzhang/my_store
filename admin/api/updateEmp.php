@@ -5,7 +5,7 @@
  * Date: 2017/8/9
  * Time: 下午3:30
  */
-
+session_start();
 $config = require_once "./../config.php";
 require_once './../Api.php';
 
@@ -26,7 +26,11 @@ if(!isset($cookie)){
     echo API::json(300, '用户没有权限,请先登录', array());
     die();
 }
-
+if(!isset($_SESSION['name'])){
+    echo API::json(300, '用户没有权限,请先登录', array());
+    $conn->close();
+    die();
+}
 $sql_s = "select id from emp where id=$id";
 
 $res_select = $conn->query($sql_s);
